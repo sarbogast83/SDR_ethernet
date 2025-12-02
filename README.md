@@ -1,4 +1,4 @@
-# radio_periph_lab
+# FUll SDR with Ethernet
 
 NOTE: 2025 Cloned from "dougwen/radio_periph_lab" for educational purposes
 
@@ -20,3 +20,12 @@ A couple of other notes to smooth things along :
 - I'm not convinced that right clicking on the "Update Hardware Platform" works when you've changed the underlying hardware XSA file.  The safest thing to do here (this is where the script really helps) is to just delete the entire Vitis directory and regenerate it.  To regenerate a Vitis directory (workspace with all the software), you can certainly do it manually as in all the other labs; however I just run the last line of "make_project.bat" from the command prompt
 - Make sure to use a standard command prompt, and not the windows powershell.
 - If you are experiencing long build times (i.e. waiting for an excessive amount of time for impl_1 to complete) this may be that you don't have enough memory to handle the level of parallelism that I asked for in the script.  Edit "impl.tcl" to change the line from "-jobs 7" to "-jobs 3" if you don't have 16GB of memory.  Your computer probably doesn't have enough memory to synthesize 7 things in parallel, and is constantly swapping to disk
+
+# Features
+Hardware is developed from the radio_periph_lab with the following additions. The control address in the full_radio block has been updated to manage the two least significant bits. Bit(0) continues to control reset of the system, write 1 to control address to reset. Bit(1) controls the  m_axis_tvalid of full_radio_0, write 2 to the control address to clear the reset and initialize tvalid signal for samples. Additionally, m_axis_tlast has be set to '1' for funtionality with the addtional fifo. 
+
+The radio stream has been split with axis_broadcast into two singals, one to the codec and the second into a axi_fifo. The fifo is connected back to the PS allowing samples to be read back into the PS. the m_axis_tvalid needs to be activated with the control bit to write samples to the fifo. 
+
+A software package, located in scr has been developed for the PS to accomplish the following tasks. Serve a web page from the Zybo. From the page, one can initalize the radio and start a UPD transmision to a target IP. Set the fake ADC and tuner frequencies, control UDP transmission (set the tvalid control bit). Execute a short example song and test thoughput. Test fifo read bandwidth. 
+
+Note: initiallizing the radio clears the UDP stream while runing the fifo test enables the stream.  
