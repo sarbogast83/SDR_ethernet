@@ -1,0 +1,47 @@
+<HTML>
+    <TITLE>Zybo Z7 Radio
+    </TITLE>
+	<p> S Arbogast<p>
+    <BODY BGCOLOR="lightblue">
+    <H1>Zybo Z7 Radio Page</H1>
+	
+	<H2>Initialize PL/Radio with Custom IP</H2>
+	<p>Initialize the PL with bitfile, configure the codec, and initilizes the udp-streamer program to target IP <p>
+    <form id=setupForm action="./cgi-bin/setup_all.sh" method="get">
+        Target IP Address: <input type="text" name="target_ip" placeholder="e.g., 192.168.1.1" required pattern="((^|\.)((25[0-5]|2[0-4]\d|[01]?\d\d?)(?!\d)))+$">
+        <!--input type="submit" value="Initialize PL/Radio/UDP"-->
+		<button type="button" onclick="ipButtonClick()">Initialize PL/Radio/UDP</button>
+    </form>
+   
+    <p>
+    <H2>Radio Tuning</H2>
+    <form action = "/cgi-bin/config_radio.sh" method = "post">
+        Fake ADC Frequency (Hz): <input type = "number" name = "adc_freq_hz"><br />
+        Radio Tune Center Frequency (Hz): <input type = "number" name = "tune_freq_hz" /> 
+        <input type="checkbox" id="streaming" name="streaming" value="streaming">
+        <label for="streaming"> Enable UDP Streaming</label><br> 
+        <input type = "submit" value = "Submit" />
+        </form>
+    <H2>Milestones / Demonstrations</H2>
+    <a href="./cgi-bin/playTune">Run Lab 10 test_radio</a><br>
+    <!--a href="runTestFifo()">Run Milestone 2: Radio + Custom FIFO Peripheral</a-->
+	<form id = "fifoForm" action="./cgi-bin/test_fifo" method="GET">
+		<!-- You can add input fields if needed, they are passed as URL parameters -->
+		<input type="hidden" name="action" value="run_test_fifo">
+		Milestone 2: Radio + Custom FIFO Peripheral  
+		<button type="button" onclick="handleFifoTest()">Run </button>
+	</form>
+
+	<script>
+		function ipButtonClick() {
+			document.getElementById("streaming").checked = false;
+			document.getElementById("setupForm").submit();}
+		
+		function handleFifoTest() {
+            document.getElementById("streaming").checked = true;
+			document.getElementById("fifoForm").submit();}
+
+	</script>
+    </BODY>
+    </HTML>
+    
